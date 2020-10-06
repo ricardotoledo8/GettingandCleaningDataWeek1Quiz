@@ -1,0 +1,236 @@
+Getting and Cleaning Data: Week 1 Quiz
+
+
+
+Question 1
+The American Community Survey distributes downloadable data about United States communities. Download the 2006 microdata survey about housing for the state of Idaho using download.file() from here:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv
+
+Hide
+fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+download.file(fileUrl1, destfile = "./Dataset/Quiz1-01.csv", method = "curl")
+
+and load the data into R. The code book, describing the variable names is here: https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf
+
+Hide
+quiz1Data <- read.csv("./Dataset/Quiz1-01.csv")
+head(quiz1Data)
+ 
+ 
+RT
+<fctr>
+SERIALNO
+<int>
+DIVISION
+<int>
+PUMA
+<int>
+REGION
+<int>
+ST
+<int>
+ADJUST
+<int>
+WGTP
+<int>
+NP
+<int>
+1	H	186	8	700	4	16	1015675	89	4	
+2	H	306	8	700	4	16	1015675	310	1	
+3	H	395	8	100	4	16	1015675	106	2	
+4	H	506	8	700	4	16	1015675	240	4	
+5	H	835	8	800	4	16	1015675	118	4	
+6	H	989	8	700	4	16	1015675	115	4	
+6 rows | 1-10 of 188 columns
+How many properties are worth $1,000,000 or more?
+
+
+
+Answer
+Hide
+sum(quiz1Data$VAL == 24, na.rm = TRUE)
+[1] 53
+
+
+Question 2
+Use the data you loaded from Question 1. Consider the variable FES in the code book. Which of the “tidy data” principles does this variable violate?
+
+Answer
+Tidy data has one variable per column.
+
+
+
+Question 3
+Download the Excel spreadsheet on Natural Gas Aquisition Program here:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx (original data source: http://catalog.data.gov/dataset/natural-gas-acquisition-program)
+
+Hide
+fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
+download.file(fileUrl1, destfile = "./Dataset/Quiz1-03.xlsx", method = "curl")
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0
+100 16197  100 16197    0     0   5436      0  0:00:02  0:00:02 --:--:--  5435
+Hide
+dateDownloaded <- date()
+dateDownloaded
+[1] "Wed Jun 20 21:33:55 2018"
+
+Read rows 18-23 and columns 7-15 into R and assign the result to a variable called: dat
+
+Hide
+library(xlsx)
+col <- 7:15
+row <- 18:23
+dat <- read.xlsx("./Dataset/Quiz1-03.xlsx", sheetIndex=1, colIndex = col, rowIndex = row)
+dat
+Zip
+<dbl>
+CuCurrent
+<dbl>
+PaCurrent
+<dbl>
+PoCurrent
+<dbl>
+Contact
+<fctr>
+Ext
+<dbl>
+Fax
+<fctr>
+email
+<lgl>
+Status
+<dbl>
+74136	0	1	0	918-491-6998	0	918-491-6659	NA	1
+30329	1	0	0	404-321-5711	NA	NA	NA	1
+74136	1	0	0	918-523-2516	0	918-523-2522	NA	1
+80203	0	1	0	303-864-1919	0	NA	NA	1
+80120	1	0	0	345-098-8890	456	NA	NA	1
+5 rows
+
+What is the value of:
+
+Answer
+Hide
+sum(dat$Zip*dat$Ext, na.rm=T)
+[1] 36534720
+
+
+Question 4
+Read the XML data on Baltimore restaurants from here:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml
+
+Hide
+library(XML)
+fileUrl3 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml"
+BalResto <- xmlTreeParse(sub("s", "", fileUrl3), useInternal=TRUE)
+rootNode <- xmlRoot(BalResto)
+
+How many restaurants have zipcode 21231?
+
+Answer
+Hide
+zip <- xpathSApply(rootNode, "//zipcode", xmlValue)
+sum(zip == 21231)
+[1] 127
+
+
+Question 5
+The American Community Survey distributes downloadable data about United States communities. Download the 2006 microdata survey about housing for the state of Idaho using download.file() from here:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv
+
+Hide
+fileUrl4 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv"
+download.file(fileUrl4, destfile = "./Dataset/Quiz1-05.csv", method = "curl")
+
+using the fread() command load the data into an R object: DT
+
+Hide
+library(data.table)
+DT <- fread("./Dataset/Quiz1-05.csv")
+DT
+RT
+<chr>
+SERIALNO
+<int>
+SPORDER
+<int>
+PUMA
+<int>
+ST
+<int>
+ADJUST
+<int>
+PWGTP
+<int>
+AGEP
+<int>
+CIT
+<int>
+COW
+<int>
+P	186	1	700	16	1015675	89	43	1	7	
+P	186	2	700	16	1015675	92	42	1	4	
+P	186	3	700	16	1015675	107	16	1	1	
+P	186	4	700	16	1015675	91	14	1	NA	
+P	306	1	700	16	1015675	309	29	1	5	
+P	395	1	100	16	1015675	108	40	1	8	
+P	395	2	100	16	1015675	90	15	1	NA	
+P	506	1	700	16	1015675	239	28	1	1	
+P	506	2	700	16	1015675	213	30	1	1	
+P	506	3	700	16	1015675	219	4	1	NA	
+Next123456...100Previous
+1-10 of 14,931 rows | 1-10 of 239 columns
+
+The following are ways to calculate the average value of the variable: pwgtp15
+
+broken down by sex. Using the data.table package, which will deliver the fastest user time? 
+
+Answer
+
+
+option a: rowMeans(DT[DT$SEX==1]); rowMeans(DT[DT$SEX==2])
+Hide
+system.time(rowMeans(DT[DT$SEX==1]), rowMeans(DT[DT$SEX==2]))
+Error in rowMeans(DT[DT$SEX == 2]) : 'x' must be numeric
+option b: DT[DT$SEX==1,]pwgtp15),mean(DT[DT
+SEX==2,]$pwgtp15))
+Hide
+system.time(mean(DT[DT$SEX==1,]$pwgtp15), mean(DT[DT$SEX==2,]$pwgtp15))
+   user  system elapsed 
+  0.052   0.000   0.050 
+option c: DT[,mean(pwgtp15),by=SEX])
+Hide
+system.time(DT[,mean(pwgtp15),by=SEX])
+   user  system elapsed 
+  0.004   0.000   0.003 
+option d: sapply(split(DTpwgtp15,DT
+SEX),mean))
+Hide
+system.time(sapply(split(DT$pwgtp15,DT$SEX),mean))
+   user  system elapsed 
+  0.000   0.000   0.002 
+option e: tapply(DTpwgtp15,DT
+SEX,mean))
+Hide
+system.time(tapply(DT$pwgtp15,DT$SEX,mean))
+   user  system elapsed 
+  0.000   0.000   0.002 
+option f: mean(DTpwgtp15,by=DT
+SEX))
+Hide
+system.time(mean(DT$pwgtp15,by=DT$SEX))
+   user  system elapsed 
+  0.000   0.000   0.001 
+
+
+END
